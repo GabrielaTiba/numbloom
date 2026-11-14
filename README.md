@@ -72,8 +72,7 @@ flutter run -d chrome --web-port=5000
 ```
 
 O projeto usa o Firebase `numbloom-26916` (a configuração já está em
-`lib/firebase_options.dart`). Para usar outro projeto Firebase, veja
-[`docs/SETUP.md`](docs/SETUP.md).
+`lib/firebase_options.dart`).
 
 ## Estrutura
 
