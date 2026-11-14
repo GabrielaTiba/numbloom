@@ -1,0 +1,47 @@
+name: numbloom
+description: "NumBloom - Let Numbers Bloom. Engenharia reversa do Emplake."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+# ATENÇÃO: as versões estão como "any" de propósito. Rode:
+#   flutter pub upgrade --major-versions
+# e depois fixe (^x.y.z) as versões que o pub resolveu.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  # Firebase (plano Spark)
+  firebase_core: any
+  firebase_auth: any
+  cloud_firestore: any
+  firebase_ui_auth: any
+  firebase_ui_oauth_google: any
+  firebase_ui_localizations: any   # textos do login traduzidos (en/pt)
+  google_sign_in: any
+
+  # Estado, rotas, persistência
+  flutter_riverpod: any
+  go_router: any
+  shared_preferences: any
+
+  # UI
+  curved_navigation_bar: any
+  flutter_math_fork: any          # renderizador de LaTeX
+  loading_animation_widget: any   # indicador de progresso não padrão
+  google_fonts: any
+  audioplayers: any               # som opcional (desligado por padrão)
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+flutter:
+  uses-material-design: true
+  generate: true   # gera AppLocalizations a partir dos .arb (l10n.yaml)

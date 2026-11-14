@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "140137580381",
+    "project_id": "numbloom-26916",
+    "storage_bucket": "numbloom-26916.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140137580381:android:d85ec7976d5b729f950ab4",
+        "android_client_info": {
+          "package_name": "com.example.numbloom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140137580381-trj7lhfplcs0leaq1l3gjt8dc53t68gc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoRyVh0cBtm-naOtHBgTcfbf8eFU5mM-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140137580381-trj7lhfplcs0leaq1l3gjt8dc53t68gc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

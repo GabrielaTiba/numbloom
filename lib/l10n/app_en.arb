@@ -1,0 +1,199 @@
+{
+  "@@locale": "en",
+  "appName": "NumBloom",
+  "slogan": "Let Numbers Bloom.",
+  "levelEasy": "Easy",
+  "levelIntermediate": "Intermediate",
+  "levelAdvanced": "Advanced",
+  "levelHard": "Hard",
+  "resultCorrect": "Correct! Your garden grows.",
+  "resultWrong": "Not quite: {left} ≠ {right}",
+  "@resultWrong": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "right": {
+        "type": "String"
+      }
+    }
+  },
+  "errEmpty": "Build an expression first.",
+  "errMissingEquals": "The expression needs an equals sign (=).",
+  "errMultipleEquals": "Use only one equals sign (=).",
+  "errUnexpectedToken": "Something is out of place in the expression.",
+  "errUnexpectedEnd": "The expression is incomplete.",
+  "errUnbalanced": "Parentheses or brackets are not balanced.",
+  "errOperatorNotAllowed": "That operator is not available at this level.",
+  "errDivisionByZero": "Division by zero is not allowed.",
+  "errNonIntegerDivision": "Only exact (integer) divisions are allowed at this level.",
+  "errNegativeSqrt": "Square root of a negative number.",
+  "errNonIntegerRoot": "Roots must be exact at this level.",
+  "errInvalidFactorial": "Factorial needs a non-negative integer.",
+  "errNonIntegerResult": "Intermediate results must be integers at this level.",
+  "errOverflow": "That number got too big.",
+  "errInvalidPower": "Invalid power.",
+  "titleSignIn": "Sign in",
+  "titleSignUp": "Sign up",
+  "titleGoogle": "Google",
+  "groupCredits": "Made by {members}",
+  "@groupCredits": {
+    "placeholders": {
+      "members": {
+        "type": "String"
+      }
+    }
+  },
+  "languagePortuguese": "Portuguese",
+  "languageEnglish": "English",
+  "chooseLanguage": "Choose language",
+  "navGame": "Play",
+  "navProgress": "Progress",
+  "navSettings": "Settings",
+  "navHelp": "Help",
+  "comingSoon": "Coming in the next step.",
+  "back": "Back",
+  "close": "Close",
+  "settingsTheme": "Theme",
+  "themeSystem": "Device",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsFontSize": "Font size",
+  "settingsFontPreview": "A garden grows with every sum: 2 + 3 = 5.",
+  "settingsFontFamily": "Font",
+  "settingsSeedColor": "Theme color",
+  "settingsCustomColor": "Custom color",
+  "settingsLanguage": "Language",
+  "settingsSound": "Sound",
+  "settingsAccount": "Account",
+  "settingsSignedInAs": "Signed in as {email}",
+  "@settingsSignedInAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSignOut": "Sign out",
+  "helpTitle": "How to play",
+  "helpGoalTitle": "Goal",
+  "helpHowTitle": "Playing",
+  "helpLevelsTitle": "Levels and operators",
+  "helpRulesTitle": "Rules",
+  "helpGardenTitle": "Your garden",
+  "helpGardenBody": "Every solved number plants something new in your garden, and plants grow as you keep solving. Skipped numbers do not count.",
+  "themeSwitchToDark": "Switch to dark mode",
+  "themeSwitchToLight": "Switch to light mode",
+  "soundTurnOn": "Turn sound effects on",
+  "soundTurnOff": "Turn sound effects off",
+  "loading": "Loading…",
+  "loadError": "Could not load your data.",
+  "retry": "Try again",
+  "gameNumberLabel": "Number",
+  "gameLevelLabel": "Level",
+  "gameScore": "Score",
+  "gameFormulaTitle": "Your formula",
+  "gameFormulaEmpty": "Place operators between the digits to build your formula.",
+  "gameOperators": "Operators",
+  "gameCheck": "Check",
+  "gameClear": "Clear",
+  "gameUndo": "Remove last",
+  "gameSkip": "Skip",
+  "gameNext": "Next number",
+  "gameSlotLabel": "Gap {index}",
+  "@gameSlotLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "gameTapGapHint": "Now tap a gap in the number, or drag the piece there.",
+  "gameCorrectPoints": "+{points} points",
+  "@gameCorrectPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "gameSaving": "Saving your progress…",
+  "gameSaveError": "Could not save your progress. Check your connection.",
+  "gameAllSolved": "You solved every number at this level! Try another level.",
+  "progressSolved": "Solved",
+  "progressCompletion": "Completion",
+  "progressByLevel": "By level",
+  "progressGardenTitle": "Your garden",
+  "progressGardenLabel": "Garden with {count} plants",
+  "@progressGardenLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecent": "Recent solutions",
+  "progressNoSolutions": "Solve your first number to plant your first seed!",
+  "progressLevelCount": "{solved} of {total}",
+  "@progressLevelCount": {
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "musicTurnOn": "Turn music on",
+  "musicTurnOff": "Turn music off",
+  "settingsMusic": "Music",
+  "settingsMusicSubtitle": "Gentle background music. Off by default.",
+  "settingsEffects": "Sound effects",
+  "settingsEffectsSubtitle": "Clicks and answer sounds. Off by default.",
+  "helpGoalBody": "You get a four-digit number. Place operators between its digits, in order, so that both sides of the equals sign give the same result.",
+  "helpExample": "Example",
+  "helpExampleCaption": "The number 8131 becomes √(8+1) = 3**1, because 3 = 3.",
+  "helpStep1": "Pick a level. Harder levels have fewer operators and give more points.",
+  "helpStep2": "Tap an operator, then tap a gap in the number. You can also hold and drag it there.",
+  "helpStep3": "Tap a placed piece to remove it. “Remove last” and “Clear” help too.",
+  "helpStep4": "Press Check. The pieces fly back to their buttons and your answer is tested.",
+  "helpStep5": "Correct answers earn points and make your garden grow. Stuck? Press Skip.",
+  "helpRule1": "Digits side by side form one number: 1 and 4 become 14.",
+  "helpRule2": "Use exactly one equals sign. It starts between the 2nd and 3rd digits and can be moved.",
+  "helpRule3": "Only Easy accepts non-integer results, like 5/2. In other levels every division and root must be exact.",
+  "helpRule4": "Factorial (!) needs a whole number that is zero or more.",
+  "helpLevelPoints": "{points} points per number",
+  "@helpLevelPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "authEmail": "Email",
+  "authPassword": "Password",
+  "authConfirmPassword": "Confirm password",
+  "authForgotPassword": "Forgot password?",
+  "authGoogleButton": "Sign in with Google",
+  "authResetTitle": "Reset password",
+  "authResetSend": "Send reset link",
+  "opTipAdd": "Addition: 2 + 3 = 5",
+  "opTipSubtract": "Subtraction: 5 − 2 = 3",
+  "opTipMultiply": "Multiplication: 2 × 3 = 6",
+  "opTipDivide": "Division: 6 ÷ 3 = 2",
+  "opTipParenOpen": "Open parenthesis: groups what comes next",
+  "opTipParenClose": "Close parenthesis: ends the group",
+  "opTipSqrt": "Square root: √9 = 3",
+  "opTipCbrt": "Cube root: ∛8 = 2",
+  "opTipFactorial": "Factorial: 4! = 4 × 3 × 2 × 1 = 24",
+  "opTipPower": "Power (exponent): 2 ** 3 = 8",
+  "opTipAbs": "Absolute value (modulus): |−5| = 5. One bar opens, the next closes",
+  "opTipFloorOpen": "Floor, opening: ⌊x⌋ is the largest integer not above x",
+  "opTipFloorClose": "Floor, closing",
+  "opTipCeilOpen": "Ceiling, opening: ⌈x⌉ is the smallest integer not below x",
+  "opTipCeilClose": "Ceiling, closing",
+  "opTipEquals": "Equals sign: both sides must give the same result",
+  "gameTileHint": "Drag to move · tap to remove",
+  "firebaseInitError": "Could not connect to Firebase. Check the project configuration (flutterfire configure) and your internet connection."
+}
