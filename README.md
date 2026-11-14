@@ -4,10 +4,10 @@ Trabalho de **Engenharia Reversa** do aplicativo **Emplake** (prof. Walter
 Carnielli), feito em **Flutter + Firebase**, com identidade visual própria
 inspirada na atmosfera de jogos de fazenda (pixel art original).
 
-> **Site publicado:** https://SEU-SITE.netlify.app
-> **Repositório:** https://github.com/SEU-USUARIO/numbloom
+> **Site publicado:** https://numbloom-game.netlify.app
+> **Repositório:** [https://github.com/GabrielaTiba/numbloom.git](https://github.com/GabrielaTiba/numbloom.git)
 
-**Grupo:** NOME 1 · NOME 2 · NOME 3
+**Grupo:** Gabriela Aya Tiba
 
 ## O jogo
 
