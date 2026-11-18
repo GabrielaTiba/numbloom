@@ -452,4 +452,22 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get firebaseInitError =>
       'Não foi possível conectar ao Firebase. Confira a configuração do projeto (flutterfire configure) e a sua conexão com a internet.';
+
+  @override
+  String get gameStartHint =>
+      'Toque em um operador e depois em um espaço entre os dígitos (ou arraste a peça até lá).';
+
+  @override
+  String get gameWrongKeep =>
+      'Suas peças continuam aí. Ajuste e verifique de novo.';
+
+  @override
+  String get gameSeeGarden => 'Ver meu jardim';
+
+  @override
+  String get gameCorrectTitle => 'Muito bem!';
+
+  @override
+  String get helpRule5 =>
+      '× e ÷ vêm antes de + e −. √, ∛ e ! valem só para o número ao lado, e o sinal de menos só para o que vem depois dele, a menos que haja parênteses.';
 }

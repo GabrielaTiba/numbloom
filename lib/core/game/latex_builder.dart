@@ -91,7 +91,12 @@ class LatexBuilder {
       case OperatorKind.cbrt:
         return '\\sqrt[3]{${_unwrap(n.arg)}}';
       case OperatorKind.factorial:
-        return '${_node(n.arg)}!';
+        final a = n.arg;
+        final isRoot = a is FuncNode &&
+            (a.op == OperatorKind.sqrt || a.op == OperatorKind.cbrt);
+        return isRoot
+            ? r'\left(' + _node(a) + r'\right)!'
+            : '${_node(a)}!';
       case OperatorKind.absOpen:
         return '\\left|${_node(n.arg)}\\right|';
       case OperatorKind.floorOpen:

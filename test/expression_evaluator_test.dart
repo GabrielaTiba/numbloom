@@ -116,6 +116,33 @@ void main() {
         ExpressionErrorCode.unexpectedToken);
   });
 
+  test('precedência igual à do enunciado do professor', () {
+    bool ok(String s) => run(s, GameLevel.easy).isCorrect;
+    expect(ok('1+2*3=7'), isTrue); // 1 + (2*3)
+    expect(ok('2*3!=12'), isTrue); // 2 * (3!)
+    expect(ok('√16!=24'), isTrue); // (√16)! = 4! = 24  (e NÃO √(16!))
+    // (√8)! não é inteiro => erro de fatorial (prova que o ! vale para a raiz)
+    expect(run('√8!+0=1+1', GameLevel.easy).error?.code,
+        ExpressionErrorCode.invalidFactorial);
+    expect(ok('-2+2=0+0'), isTrue); // (-2) + 2
+    expect(ok('--2+0!=3+0'), isTrue); // (-(-2)) + 0!
+    expect(ok('-(-2+5)=4-7'), isTrue);
+    expect(ok('∛-8=-2'), isTrue); // raiz cúbica de número negativo
+    expect(ok('√√(8*2)=2'), isTrue); // raízes aninhadas
+  });
+
+  test('expressões compostas: vários menos unários e fatoriais duplos', () {
+    // ---(1+2)=-3 : três menos unários
+    expect(run('---(1+2)=-3', GameLevel.easy).isCorrect, isTrue);
+    // 3!! = (3!)! = 720
+    expect(run('3!!=720', GameLevel.easy).isCorrect, isTrue);
+  });
+
+  test('LaTeX: (√8)! com parênteses', () {
+    expect(LatexBuilder.fromTokens(tok('√8!=1'), GameLevel.easy),
+        r'\left(\sqrt{8}\right)! = 1');
+  });
+
   test('LaTeX estruturado mesmo com a fórmula incompleta (sem "=")', () {
     expect(LatexBuilder.fromTokens(tok('∛944^4'), GameLevel.easy),
         r'\sqrt[3]{944}^{4}');

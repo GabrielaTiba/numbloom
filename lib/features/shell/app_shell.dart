@@ -31,6 +31,20 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   static const _helpIndex = 3;
 
+  @override
+  void initState() {
+    super.initState();
+    // Quem usa o app pela primeira vez vê o "Como jogar" sem precisar procurar.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final prefs = ref.read(preferencesServiceProvider);
+      if (!prefs.helpSeen) {
+        prefs.setHelpSeen();
+        HelpDialog.show(context);
+      }
+    });
+  }
+
   Future<void> _onTap(int i) async {
     final current = widget.navigationShell.currentIndex;
     if (i == _helpIndex) {

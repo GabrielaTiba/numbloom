@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:numbloom/core/game/expression_evaluator.dart';
 import 'package:numbloom/core/game/operator_kind.dart';
 import 'package:numbloom/models/expression_model.dart';
 import 'package:numbloom/models/progress_model.dart';
@@ -60,6 +61,28 @@ void main() {
       final e = ExpressionModel.initial().place(OperatorKind.equals, 2, 0);
       expect(e.gaps[2], [OperatorKind.equals]);
       expect(e.hasEquals, isTrue);
+    });
+
+    test('módulos aninhados: ||1-5|-2| = 2', () {
+      final e = ExpressionModel.initial()
+          .place(OperatorKind.equals, 3)
+          .place(OperatorKind.absOpen, 0)
+          .place(OperatorKind.absOpen, 0)
+          .place(OperatorKind.subtract, 1)
+          .place(OperatorKind.absOpen, 2)
+          .place(OperatorKind.subtract, 2)
+          .place(OperatorKind.absOpen, 3, 0);
+      final t = e.toTokens(['1', '5', '2', '2']);
+      expect(t.map((x) => x.toString()).join(), '||1−5|−2|=2');
+      expect(ExpressionEvaluator.evaluate(t, GameLevel.hard).isCorrect, isTrue);
+    });
+
+    test('aceita mais de 24 operadores (expressões compostas)', () {
+      var e = ExpressionModel.initial();
+      for (var i = 0; i < 30; i++) {
+        e = e.place(OperatorKind.add, 0);
+      }
+      expect(e.operatorCount, 30);
     });
 
     test('removeLast ignora o "=" e clearOperators o mantém', () {

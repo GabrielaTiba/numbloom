@@ -133,5 +133,10 @@
   "opTipCeilClose": "Teto, fechamento",
   "opTipEquals": "Sinal de igual: os dois lados precisam dar o mesmo resultado",
   "gameTileHint": "Arraste para mover · toque para remover",
-  "firebaseInitError": "Não foi possível conectar ao Firebase. Confira a configuração do projeto (flutterfire configure) e a sua conexão com a internet."
+  "firebaseInitError": "Não foi possível conectar ao Firebase. Confira a configuração do projeto (flutterfire configure) e a sua conexão com a internet.",
+  "gameStartHint": "Toque em um operador e depois em um espaço entre os dígitos (ou arraste a peça até lá).",
+  "gameWrongKeep": "Suas peças continuam aí. Ajuste e verifique de novo.",
+  "gameSeeGarden": "Ver meu jardim",
+  "gameCorrectTitle": "Muito bem!",
+  "helpRule5": "× e ÷ vêm antes de + e −. √, ∛ e ! valem só para o número ao lado, e o sinal de menos só para o que vem depois dele, a menos que haja parênteses."
 }

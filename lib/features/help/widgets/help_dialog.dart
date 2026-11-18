@@ -61,7 +61,13 @@ class HelpDialog extends StatelessWidget {
     final theme = Theme.of(context);
 
     final steps = [l.helpStep1, l.helpStep2, l.helpStep3, l.helpStep4, l.helpStep5];
-    final rules = [l.helpRule1, l.helpRule2, l.helpRule3, l.helpRule4];
+    final rules = [
+      l.helpRule1,
+      l.helpRule2,
+      l.helpRule3,
+      l.helpRule4,
+      l.helpRule5,
+    ];
 
     return PixelDialog(
       title: l.helpTitle,

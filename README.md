@@ -56,7 +56,16 @@ Quatro níveis, conforme o enunciado:
 - **Dígitos lado a lado formam um só número** (1 e 4 viram 14).
 - Fora do nível Fácil, toda **divisão e raiz precisam ser exatas**; todos os
   valores intermediários são inteiros (limite de 10¹⁵).
-- A barra `|` é uma peça só: a 1ª abre e a 2ª fecha o módulo.
+- **Precedência** (igual ao aplicativo original): `×` e `÷` antes de `+` e `−`;
+  `√`, `∛` e `!` valem só para o número ao lado (`√8!` é `(√8)!`); o `−` unário
+  vale só para o que vem depois (`−2+2` é `(−2)+2`, `−−2` é `−(−2)`).
+- É possível inserir um operador **entre quaisquer duas peças** (antes, entre e
+  depois de cada uma) e arrastar as peças já colocadas. Sem limite baixo de
+  operadores (aceita expressões compostas).
+- A barra `|` é uma peça só: fecha o módulo quando vem depois de um número,
+  `)` ou `!`; senão abre. Por isso os módulos podem ser aninhados.
+- Ao **errar**, as peças continuam onde estavam; ao **acertar**, uma janela
+  comemora e as peças voltam aos botões.
 - Pontos por número: Fácil 10, Intermediário 20, Avançado 35, Difícil 60.
 - Som, música e efeitos são **sintetizados em código** (sem arquivos de áudio).
 - Os dados do jogador ficam em `users/{uid}` no Firestore (plano Spark); as

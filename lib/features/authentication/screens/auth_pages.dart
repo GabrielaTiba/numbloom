@@ -17,8 +17,9 @@ import '../widgets/auth_shell.dart';
 Widget _flow(
   WidgetRef ref,
   AuthAction action,
-  List<AuthProvider> providers,
-) {
+  List<AuthProvider> providers, {
+  bool allowSwitch = false,
+}) {
   void done(BuildContext context) {
     ref.read(soundServiceProvider).play(SoundEffect.bloom);
     context.go(AppRoutes.game);
@@ -37,7 +38,8 @@ Widget _flow(
       child: LoginView(
         action: action,
         providers: providers,
-        showAuthActionSwitch: false,
+        // Mostra "Não tem conta? Cadastre-se" / "Já tem conta? Entrar".
+        showAuthActionSwitch: allowSwitch,
       ),
     ),
   );
@@ -60,7 +62,7 @@ class EmailSignInPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
-      _flow(ref, AuthAction.signIn, [EmailAuthProvider()]);
+      _flow(ref, AuthAction.signIn, [EmailAuthProvider()], allowSwitch: true);
 }
 
 class GoogleSignInPage extends ConsumerWidget {
@@ -79,5 +81,5 @@ class RegisterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
-      _flow(ref, AuthAction.signUp, [EmailAuthProvider()]);
+      _flow(ref, AuthAction.signUp, [EmailAuthProvider()], allowSwitch: true);
 }

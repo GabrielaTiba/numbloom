@@ -83,10 +83,18 @@ class ParsedEquation {
 ///   term    := unary (('*'|'/') unary)*
 ///   unary   := ('-'|'+') unary | power
 ///   power   := postfix ('**' unary)?          (associativo à direita)
-///   postfix := primary '!'*
-///   primary := número | '(' expr ')' | '|' expr '|' | '⌊' expr '⌋'
-///            | '⌈' expr '⌉' | ('√'|'∛') postfix
-/// Raiz prefixa: √9! = √(9!); (√4)! exige parênteses.
+///   postfix := rooted '!'*                    ("!" vale só para o que vem antes)
+///   rooted  := ('√'|'∛') rootArg | primary
+///   rootArg := ('-'|'+') rootArg | rooted     (raiz vale só para o número à frente)
+///   primary := número | '(' expr ')' | '|' expr '|' | '⌊' expr '⌋' | '⌈' expr '⌉'
+///
+/// Regras do enunciado do professor (iguais às do aplicativo original):
+///  * * e / têm precedência sobre + e - binários;
+///  * √ e ∛ valem só para o número à frente (ou para o que estiver entre
+///    parênteses): "√8!" é (√8)!, e não √(8!);
+///  * "!" vale só para o número (ou grupo) que o precede: "2*3!" é 2*(3!);
+///  * o "-" unário vale só para o número (ou grupo) que o segue: "-2+2" é
+///    (-2)+2, "--2" é -(-2).
 /// Não há multiplicação implícita: "2(3)" é erro.
 class ExpressionParser {
   const ExpressionParser._();
@@ -208,12 +216,35 @@ class _SideParser {
   }
 
   Node _postfix() {
-    var n = _primary();
+    var n = _rooted();
     while (_curOp == OperatorKind.factorial) {
       _i++;
       n = FuncNode(OperatorKind.factorial, n);
     }
     return n;
+  }
+
+  /// Raiz (√ ou ∛) aplicada SÓ ao número que vem à frente (aceita sinal:
+  /// "∛-8"); sem raiz, é um primário comum.
+  Node _rooted() {
+    final tok = _cur;
+    if (tok != null && !tok.isDigit) {
+      final op = tok.op!;
+      if (op == OperatorKind.sqrt || op == OperatorKind.cbrt) {
+        _i++;
+        return FuncNode(op, _rootArg());
+      }
+    }
+    return _primary();
+  }
+
+  Node _rootArg() {
+    if (_curOp == OperatorKind.subtract || _curOp == OperatorKind.add) {
+      final negate = _curOp == OperatorKind.subtract;
+      _i++;
+      return UnaryNode(negate, _rootArg());
+    }
+    return _rooted();
   }
 
   Node _primary() {
@@ -254,9 +285,7 @@ class _SideParser {
         return FuncNode(OperatorKind.ceilOpen, inner);
       case OperatorKind.sqrt:
       case OperatorKind.cbrt:
-        final op = tok.op!;
-        _i++;
-        return FuncNode(op, _postfix());
+        return _rooted();
       default:
         throw ExpressionException(ExpressionErrorCode.unexpectedToken,
             position: _pos);

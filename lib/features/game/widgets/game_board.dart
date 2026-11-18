@@ -1,9 +1,13 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/game/expression_evaluator.dart';
 import '../../../core/game/latex_builder.dart';
 import '../../../core/game/operator_kind.dart';
+import '../../../core/routing/app_routes.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/expression_model.dart';
 import '../../../models/progress_model.dart';
@@ -20,10 +24,15 @@ import 'feedback_panel.dart';
 import 'formula_preview.dart';
 import 'game_header.dart';
 import 'operator_palette.dart';
+import 'success_dialog.dart';
 
 /// Tela de jogo (depois que o progresso foi carregado do Firestore).
-/// Fluxo: escolher nível -> montar a expressão -> Verificar -> as peças
-/// voltam à paleta (animação) -> acerto grava no Firestore.
+///
+/// Fluxo: escolher nível -> montar a expressão -> Verificar.
+///  * ERRO: as peças FICAM onde estão (o jogador continua de onde parou), o
+///    tabuleiro balança e a mensagem aparece logo abaixo do número.
+///  * ACERTO: as peças voam de volta aos botões, uma janela com uma flor
+///    desabrochando mostra os pontos e o resultado é gravado no Firestore.
 class GameBoard extends ConsumerStatefulWidget {
   const GameBoard({super.key});
 
@@ -31,13 +40,26 @@ class GameBoard extends ConsumerStatefulWidget {
   ConsumerState<GameBoard> createState() => _GameBoardState();
 }
 
-class _GameBoardState extends ConsumerState<GameBoard> {
+class _GameBoardState extends ConsumerState<GameBoard>
+    with SingleTickerProviderStateMixin {
   bool _busy = false;
   bool _picking = false;
   SolutionRecord? _pending;
 
   final Map<String, GlobalKey> _tokenKeys = {};
   final Map<OperatorKind, GlobalKey> _paletteKeys = {};
+  final GlobalKey _feedbackKey = GlobalKey();
+
+  late final AnimationController _shake = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 450),
+  );
+
+  @override
+  void dispose() {
+    _shake.dispose();
+    super.dispose();
+  }
 
   GlobalKey _tokenKey(int gap, int index) =>
       _tokenKeys.putIfAbsent('$gap-$index', () => GlobalKey());
@@ -45,7 +67,7 @@ class _GameBoardState extends ConsumerState<GameBoard> {
   GlobalKey _paletteKey(OperatorKind op) =>
       _paletteKeys.putIfAbsent(op, () => GlobalKey());
 
-  /// Sorteia o primeiro desafio (número ainda não resolvido).
+  /// Primeira vez: retoma a partida salva (se houver) ou sorteia um número.
   void _ensureChallenge() {
     final game = ref.read(gameProvider);
     if (game.challenge != null || game.allSolved || _picking) return;
@@ -55,7 +77,6 @@ class _GameBoardState extends ConsumerState<GameBoard> {
       if (!mounted) return;
       final g = ref.read(gameProvider);
       if (g.challenge != null || g.allSolved) return;
-      // Retoma a partida salva (se houver) ou sorteia um número novo.
       ref
           .read(gameProvider.notifier)
           .startSession(ref.read(progressProvider).solvedAt(g.level));
@@ -83,6 +104,20 @@ class _GameBoardState extends ConsumerState<GameBoard> {
     return specs;
   }
 
+  void _scrollToFeedback() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _feedbackKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          alignment: 0.2,
+        );
+      }
+    });
+  }
+
   Future<void> _check() async {
     if (_busy) return;
     final game = ref.read(gameProvider);
@@ -98,8 +133,6 @@ class _GameBoardState extends ConsumerState<GameBoard> {
     final text = tokens.map((t) => t.toString()).join();
 
     setState(() => _busy = true);
-    final specs = _captureFlights(game); // antes de limpar a expressão
-
     notifier.setFeedback(GameFeedback(
       correct: correct,
       expressionText: text,
@@ -109,22 +142,49 @@ class _GameBoardState extends ConsumerState<GameBoard> {
       right: result.rightValue,
       points: correct ? game.level.points : 0,
     ));
-    notifier.clearOperators(); // as peças saem da expressão...
-    sound.play(correct ? SoundEffect.success : SoundEffect.error);
-    await playTileFlight(context, specs); // ...e voltam aos seus botões
+
+    if (!correct) {
+      // ERRO: NÃO limpa as peças. O jogador continua de onde estava.
+      sound.play(SoundEffect.error);
+      if (!MediaQuery.disableAnimationsOf(context)) _shake.forward(from: 0);
+      _scrollToFeedback();
+      if (mounted) setState(() => _busy = false);
+      return;
+    }
+
+    // ACERTO: as peças voltam aos botões e aparece a comemoração.
+    final specs = _captureFlights(game); // antes de limpar a expressão
+    notifier.clearOperators();
+    sound.play(SoundEffect.success);
+    await playTileFlight(context, specs);
     if (!mounted) return;
 
-    if (correct) {
-      _pending = SolutionRecord(
-        number: challenge.number,
-        level: game.level,
-        expression: text,
-        latex: latex,
-        points: game.level.points,
-      );
-      await _save();
-    }
+    _pending = SolutionRecord(
+      number: challenge.number,
+      level: game.level,
+      expression: text,
+      latex: latex,
+      points: game.level.points,
+    );
+    final saving = _save();
+    _showSuccess();
+    await saving;
     if (mounted) setState(() => _busy = false);
+  }
+
+  void _showSuccess() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => SuccessDialog(
+        onNext: () => ref.read(gameProvider.notifier).newChallenge(_solved),
+        onSeeGarden: () {
+          ref.read(gameProvider.notifier).newChallenge(_solved);
+          context.go(AppRoutes.progress);
+        },
+        onRetrySave: _save,
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -168,6 +228,10 @@ class _GameBoardState extends ConsumerState<GameBoard> {
     } else if (challenge == null) {
       boardContent = const Center(child: BloomLoader());
     } else {
+      // Instrução sempre visível: muda conforme o que o jogador está fazendo.
+      final String? hint = game.selected != null
+          ? l.gameTapGapHint
+          : (game.expression.operatorCount == 0 ? l.gameStartHint : null);
       boardContent = Column(
         children: [
           ExpressionBoard(
@@ -184,11 +248,11 @@ class _GameBoardState extends ConsumerState<GameBoard> {
             onDragStart: notifier.select,
             onDragEnd: () => notifier.select(null),
           ),
-          if (game.selected != null)
+          if (hint != null)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                l.gameTapGapHint,
+                hint,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
@@ -197,7 +261,17 @@ class _GameBoardState extends ConsumerState<GameBoard> {
       );
     }
 
-    final board = WoodPanel(title: l.gameNumberLabel, child: boardContent);
+    // O tabuleiro balança quando a resposta está errada.
+    final board = AnimatedBuilder(
+      animation: _shake,
+      child: WoodPanel(title: l.gameNumberLabel, child: boardContent),
+      builder: (context, child) {
+        final v = _shake.value;
+        final dx = math.sin(v * math.pi * 8) * 10 * (1 - v);
+        return Transform.translate(offset: Offset(dx, 0), child: child);
+      },
+    );
+
     final preview = FormulaPreview(
         latex: LatexBuilder.fromTokens(game.tokens, game.level));
 
@@ -216,41 +290,55 @@ class _GameBoardState extends ConsumerState<GameBoard> {
     );
 
     final canCheck = interactive && challenge != null;
-    final actions = Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 10,
-      runSpacing: 4,
+    final actions = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // "Verificar" em destaque, ocupando a largura toda.
         PixelButton(
           label: l.gameCheck,
           icon: const Icon(Icons.check),
+          expanded: true,
           onPressed: canCheck ? _check : null,
         ),
-        PixelButton(
-          label: l.gameUndo,
-          variant: PixelButtonVariant.neutral,
-          onPressed: canCheck ? notifier.removeLast : null,
-        ),
-        PixelButton(
-          label: l.gameClear,
-          variant: PixelButtonVariant.neutral,
-          onPressed: canCheck ? notifier.clearOperators : null,
-        ),
-        PixelButton(
-          label: l.gameSkip,
-          variant: PixelButtonVariant.secondary,
-          icon: const Icon(Icons.skip_next),
-          onPressed: (!_busy && (challenge != null)) ? () => notifier.skip(_solved) : null,
+        const SizedBox(height: 8),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 10,
+          runSpacing: 4,
+          children: [
+            PixelButton(
+              label: l.gameUndo,
+              variant: PixelButtonVariant.neutral,
+              onPressed: canCheck ? notifier.removeLast : null,
+            ),
+            PixelButton(
+              label: l.gameClear,
+              variant: PixelButtonVariant.neutral,
+              onPressed: canCheck ? notifier.clearOperators : null,
+            ),
+            PixelButton(
+              label: l.gameSkip,
+              variant: PixelButtonVariant.secondary,
+              icon: const Icon(Icons.skip_next),
+              onPressed: (!_busy && challenge != null)
+                  ? () => notifier.skip(_solved)
+                  : null,
+            ),
+          ],
         ),
       ],
     );
 
-    final feedback = game.feedback == null
-        ? const SizedBox.shrink()
-        : FeedbackPanel(
-            feedback: game.feedback!,
-            onNext: () => notifier.newChallenge(_solved),
-            onRetrySave: _save,
+    // Resultado logo abaixo do número (não escondido no fim da página).
+    final Widget? feedback = game.feedback == null
+        ? null
+        : KeyedSubtree(
+            key: _feedbackKey,
+            child: FeedbackPanel(
+              feedback: game.feedback!,
+              onNext: () => notifier.newChallenge(_solved),
+              onRetrySave: _save,
+            ),
           );
 
     const gap = SizedBox(height: 12);
@@ -260,7 +348,14 @@ class _GameBoardState extends ConsumerState<GameBoard> {
             children: [
               Expanded(
                 flex: 3,
-                child: Column(children: [header, gap, board, gap, preview, gap, feedback]),
+                child: Column(children: [
+                  header,
+                  gap,
+                  board,
+                  gap,
+                  if (feedback != null) ...[feedback, gap],
+                  preview,
+                ]),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -274,13 +369,12 @@ class _GameBoardState extends ConsumerState<GameBoard> {
             gap,
             board,
             gap,
+            if (feedback != null) ...[feedback, gap],
             preview,
             gap,
             palette,
             gap,
             actions,
-            gap,
-            feedback,
           ]);
 
     return SingleChildScrollView(

@@ -901,6 +901,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not connect to Firebase. Check the project configuration (flutterfire configure) and your internet connection.'**
   String get firebaseInitError;
+
+  /// No description provided for @gameStartHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an operator, then tap a gap between the digits (or drag the piece there).'**
+  String get gameStartHint;
+
+  /// No description provided for @gameWrongKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pieces are still there. Adjust them and check again.'**
+  String get gameWrongKeep;
+
+  /// No description provided for @gameSeeGarden.
+  ///
+  /// In en, this message translates to:
+  /// **'See my garden'**
+  String get gameSeeGarden;
+
+  /// No description provided for @gameCorrectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done!'**
+  String get gameCorrectTitle;
+
+  /// No description provided for @helpRule5.
+  ///
+  /// In en, this message translates to:
+  /// **'× and ÷ come before + and −. √, ∛ and ! apply only to the number next to them, and a minus sign only to what follows it, unless there are parentheses.'**
+  String get helpRule5;
 }
 
 class _AppLocalizationsDelegate

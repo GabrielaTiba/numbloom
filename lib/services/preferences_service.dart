@@ -65,6 +65,12 @@ class PreferencesService {
   Future<void> setGameLevel(GameLevel level) =>
       _p.setString(_kLevel, level.name);
 
+  // ---- Ajuda "Como jogar" mostrada automaticamente na 1ª vez ----
+
+  bool get helpSeen => _p.getBool('help.seen') ?? false;
+
+  Future<void> setHelpSeen() => _p.setBool('help.seen', true);
+
   // ---- Partida em andamento (uma por usuário) ----
 
   String _sessionKey(String uid) => 'game.session.$uid';

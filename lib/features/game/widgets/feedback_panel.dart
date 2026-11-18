@@ -85,6 +85,14 @@ class FeedbackPanel extends StatelessWidget {
               ),
             ),
           ),
+          if (!ok) ...[
+            const SizedBox(height: 8),
+            Text(
+              l.gameWrongKeep,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
           if (ok) ...[
             const SizedBox(height: 12),
             if (feedback.saving)

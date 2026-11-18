@@ -16,7 +16,9 @@ class ExpressionModel {
 
   static const int gapCount = 5;
   static const int defaultEqualsGap = 2;
-  static const int maxOperators = 24;
+  /// Limite de segurança alto: expressões compostas do aplicativo original
+  /// passam de 25 operadores.
+  static const int maxOperators = 80;
 
   final List<List<OperatorKind>> gaps;
 
@@ -120,13 +122,31 @@ class ExpressionModel {
   /// abertura, a 2ª fechamento, e assim por diante (módulo sem aninhamento).
   List<ExprToken> toTokens(List<String> digits) {
     final out = <ExprToken>[];
-    var barOpen = false;
+
+    // A barra "|" é uma peça só. Ela FECHA o módulo quando vem logo depois de
+    // um número, ")", "!" ou outro delimitador de fechamento; nos demais casos
+    // ela ABRE. Assim os módulos podem ser aninhados: ||1-5|-2|.
+    bool closesBar(ExprToken? prev) {
+      if (prev == null) return false;
+      if (prev.isDigit) return true;
+      switch (prev.op!) {
+        case OperatorKind.parenClose:
+        case OperatorKind.absClose:
+        case OperatorKind.floorClose:
+        case OperatorKind.ceilClose:
+        case OperatorKind.factorial:
+          return true;
+        default:
+          return false;
+      }
+    }
+
     for (var g = 0; g < gapCount; g++) {
       for (final op in gaps[g]) {
         if (op == OperatorKind.absOpen || op == OperatorKind.absClose) {
+          final closing = closesBar(out.isEmpty ? null : out.last);
           out.add(ExprToken.op(
-              barOpen ? OperatorKind.absClose : OperatorKind.absOpen));
-          barOpen = !barOpen;
+              closing ? OperatorKind.absClose : OperatorKind.absOpen));
         } else {
           out.add(ExprToken.op(op));
         }
