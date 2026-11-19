@@ -1,9 +1,11 @@
 import '../../l10n/generated/app_localizations.dart';
 import 'expression_parser.dart';
+import 'operator_kind.dart';
 
 /// Traduz códigos de erro do avaliador (sem texto fixo no serviço).
 extension ExpressionErrorL10n on ExpressionErrorCode {
-  String localized(AppLocalizations l) {
+  /// [token] é a peça que causou o erro (usada em "falta um número antes de X").
+  String localized(AppLocalizations l, [OperatorKind? token]) {
     switch (this) {
       case ExpressionErrorCode.empty:
         return l.errEmpty;
@@ -13,6 +15,10 @@ extension ExpressionErrorL10n on ExpressionErrorCode {
         return l.errMultipleEquals;
       case ExpressionErrorCode.unexpectedToken:
         return l.errUnexpectedToken;
+      case ExpressionErrorCode.misplacedFactorial:
+        return l.errMisplacedFactorial;
+      case ExpressionErrorCode.missingOperand:
+        return l.errMissingOperand(token?.symbol ?? '?');
       case ExpressionErrorCode.unexpectedEnd:
         return l.errUnexpectedEnd;
       case ExpressionErrorCode.unbalanced:

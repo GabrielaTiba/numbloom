@@ -455,7 +455,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gameStartHint =>
-      'Tap an operator, then tap a gap between the digits (or drag the piece there).';
+      'Tap an operator below, then tap a gap between the digits (or drag the piece there).';
 
   @override
   String get gameWrongKeep =>
@@ -470,4 +470,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get helpRule5 =>
       '× and ÷ come before + and −. √, ∛ and ! apply only to the number next to them, and a minus sign only to what follows it, unless there are parentheses.';
+
+  @override
+  String get errMisplacedFactorial =>
+      'The factorial (!) goes right after a number or a closing parenthesis, like 3!.';
+
+  @override
+  String errMissingOperand(String symbol) {
+    return 'A number is missing before $symbol.';
+  }
 }

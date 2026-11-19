@@ -109,7 +109,13 @@ void main() {
     expect(run('1+=2', GameLevel.easy).error?.code,
         ExpressionErrorCode.unexpectedEnd);
     expect(run('1*/2=2', GameLevel.easy).error?.code,
-        ExpressionErrorCode.unexpectedToken);
+        ExpressionErrorCode.missingOperand);
+    // O erro do print: "!" antes do número em vez de depois.
+    final misplaced = run('!3*1=6+0', GameLevel.easy);
+    expect(misplaced.error?.code, ExpressionErrorCode.misplacedFactorial);
+    expect(misplaced.error?.token, OperatorKind.factorial);
+    // O jeito certo: 3! × 1 = 6 + 0  (3! = 6)
+    expect(run('3!*1=6+0', GameLevel.easy).isCorrect, isTrue);
     expect(run('1+2=', GameLevel.easy).error?.code,
         ExpressionErrorCode.unexpectedEnd);
     expect(run('2(3)=6', GameLevel.easy).error?.code,

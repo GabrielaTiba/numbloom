@@ -36,7 +36,7 @@ class FeedbackPanel extends StatelessWidget {
     final message = ok
         ? l.resultCorrect
         : (feedback.errorCode != null
-            ? feedback.errorCode!.localized(l)
+            ? feedback.errorCode!.localized(l, feedback.errorToken)
             : l.resultWrong(formatNumber(feedback.left ?? 0),
                 formatNumber(feedback.right ?? 0)));
 

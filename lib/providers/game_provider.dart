@@ -19,6 +19,7 @@ class GameFeedback {
     required this.expressionText,
     required this.latex,
     this.errorCode,
+    this.errorToken,
     this.left,
     this.right,
     this.points = 0,
@@ -30,6 +31,7 @@ class GameFeedback {
   final String expressionText;
   final String latex;
   final ExpressionErrorCode? errorCode;
+  final OperatorKind? errorToken;
   final double? left;
   final double? right;
   final int points;
@@ -41,6 +43,7 @@ class GameFeedback {
         expressionText: expressionText,
         latex: latex,
         errorCode: errorCode,
+        errorToken: errorToken,
         left: left,
         right: right,
         points: points,

@@ -905,7 +905,7 @@ abstract class AppLocalizations {
   /// No description provided for @gameStartHint.
   ///
   /// In en, this message translates to:
-  /// **'Tap an operator, then tap a gap between the digits (or drag the piece there).'**
+  /// **'Tap an operator below, then tap a gap between the digits (or drag the piece there).'**
   String get gameStartHint;
 
   /// No description provided for @gameWrongKeep.
@@ -931,6 +931,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'× and ÷ come before + and −. √, ∛ and ! apply only to the number next to them, and a minus sign only to what follows it, unless there are parentheses.'**
   String get helpRule5;
+
+  /// No description provided for @errMisplacedFactorial.
+  ///
+  /// In en, this message translates to:
+  /// **'The factorial (!) goes right after a number or a closing parenthesis, like 3!.'**
+  String get errMisplacedFactorial;
+
+  /// No description provided for @errMissingOperand.
+  ///
+  /// In en, this message translates to:
+  /// **'A number is missing before {symbol}.'**
+  String errMissingOperand(String symbol);
 }
 
 class _AppLocalizationsDelegate

@@ -455,7 +455,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get gameStartHint =>
-      'Toque em um operador e depois em um espaço entre os dígitos (ou arraste a peça até lá).';
+      'Toque em um operador abaixo e depois em um espaço entre os dígitos (ou arraste a peça até lá).';
 
   @override
   String get gameWrongKeep =>
@@ -470,4 +470,13 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get helpRule5 =>
       '× e ÷ vêm antes de + e −. √, ∛ e ! valem só para o número ao lado, e o sinal de menos só para o que vem depois dele, a menos que haja parênteses.';
+
+  @override
+  String get errMisplacedFactorial =>
+      'O fatorial (!) vai logo depois de um número ou de um parêntese fechado, como em 3!.';
+
+  @override
+  String errMissingOperand(String symbol) {
+    return 'Falta um número antes de $symbol.';
+  }
 }

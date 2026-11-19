@@ -196,9 +196,18 @@
   "opTipEquals": "Equals sign: both sides must give the same result",
   "gameTileHint": "Drag to move · tap to remove",
   "firebaseInitError": "Could not connect to Firebase. Check the project configuration (flutterfire configure) and your internet connection.",
-  "gameStartHint": "Tap an operator, then tap a gap between the digits (or drag the piece there).",
+  "gameStartHint": "Tap an operator below, then tap a gap between the digits (or drag the piece there).",
   "gameWrongKeep": "Your pieces are still there. Adjust them and check again.",
   "gameSeeGarden": "See my garden",
   "gameCorrectTitle": "Well done!",
-  "helpRule5": "× and ÷ come before + and −. √, ∛ and ! apply only to the number next to them, and a minus sign only to what follows it, unless there are parentheses."
+  "helpRule5": "× and ÷ come before + and −. √, ∛ and ! apply only to the number next to them, and a minus sign only to what follows it, unless there are parentheses.",
+  "errMisplacedFactorial": "The factorial (!) goes right after a number or a closing parenthesis, like 3!.",
+  "errMissingOperand": "A number is missing before {symbol}.",
+  "@errMissingOperand": {
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  }
 }

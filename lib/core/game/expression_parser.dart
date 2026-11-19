@@ -6,6 +6,10 @@ enum ExpressionErrorCode {
   missingEquals,
   multipleEquals,
   unexpectedToken,
+  /// "!" no lugar de um número (ex.: "!3"); o certo é "3!".
+  misplacedFactorial,
+  /// Operador ou fecha-parênteses onde faltava um número (ex.: "×3").
+  missingOperand,
   unexpectedEnd,
   unbalanced,
   operatorNotAllowed,
@@ -21,8 +25,11 @@ enum ExpressionErrorCode {
 
 /// Erro de sintaxe ou de domínio. A UI traduz o [code] via l10n.
 class ExpressionException implements Exception {
-  const ExpressionException(this.code, {this.position});
+  const ExpressionException(this.code, {this.position, this.token});
   final ExpressionErrorCode code;
+
+  /// Peça que causou o erro (quando conhecida).
+  final OperatorKind? token;
 
   /// Índice da peça problemática na lista de tokens (quando conhecido).
   final int? position;
@@ -287,8 +294,14 @@ class _SideParser {
       case OperatorKind.cbrt:
         return _rooted();
       default:
-        throw ExpressionException(ExpressionErrorCode.unexpectedToken,
-            position: _pos);
+        final op = tok.op!;
+        throw ExpressionException(
+          op == OperatorKind.factorial
+              ? ExpressionErrorCode.misplacedFactorial
+              : ExpressionErrorCode.missingOperand,
+          position: _pos,
+          token: op,
+        );
     }
   }
 

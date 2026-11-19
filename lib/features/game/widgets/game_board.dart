@@ -138,6 +138,7 @@ class _GameBoardState extends ConsumerState<GameBoard>
       expressionText: text,
       latex: latex,
       errorCode: result.error?.code,
+      errorToken: result.error?.token,
       left: result.leftValue,
       right: result.rightValue,
       points: correct ? game.level.points : 0,
