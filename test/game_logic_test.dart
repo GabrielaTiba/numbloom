@@ -5,6 +5,7 @@ import 'package:numbloom/models/expression_model.dart';
 import 'package:numbloom/models/progress_model.dart';
 import 'package:numbloom/core/game/game_level.dart';
 import 'package:numbloom/models/game_session.dart';
+import 'package:numbloom/features/progress/widgets/garden_view.dart';
 import 'package:numbloom/services/challenge_service.dart';
 
 void main() {
@@ -140,6 +141,15 @@ void main() {
       expect(ExpressionModel.fromNames([[], []]), isNull);
       expect(ExpressionModel.fromNames([['nada'], [], [], [], []]), isNull);
     });
+  });
+
+  test('jardim: a grade sempre fecha (sem célula sobrando)', () {
+    for (var w = 200.0; w <= 1400; w += 25) {
+      final cols = GardenView.columnsFor(w, 24);
+      expect(24 % cols, 0, reason: 'largura $w -> $cols colunas');
+    }
+    // Largura do print do usuário (~620 px): 6 colunas x 4 linhas = 24.
+    expect(GardenView.columnsFor(620, 24), 6);
   });
 
   test('ProgressModel soma pontos e conta por nível', () {

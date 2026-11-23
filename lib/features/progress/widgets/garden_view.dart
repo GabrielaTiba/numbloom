@@ -9,7 +9,7 @@ import '../../../shared/widgets/pixel_sprite.dart';
 
 /// O jardim do jogador. Cada desafio resolvido planta uma nova muda numa
 /// posição fixa (ordem determinística); as plantas mais antigas crescem:
-/// broto -> jovem -> adulta (flor, cogumelo ou árvore, conforme a parcela).
+/// botão -> jovem -> adulta (flor, cogumelo ou árvore, conforme a espécie).
 /// Com mais de [plotCount] desafios, as plantas existentes seguem crescendo.
 class GardenView extends StatelessWidget {
   const GardenView({
@@ -31,13 +31,27 @@ class GardenView extends StatelessWidget {
     return idx;
   }
 
+  /// Número de colunas que divide EXATAMENTE os [plots] canteiros, para a
+  /// grade ficar sempre completa (sem uma célula de grama sobrando no fim).
+  /// Escolhe o maior número de colunas em que cada célula ainda tem ~80 px.
+  static int columnsFor(double width, int plots) {
+    for (final cols in const [8, 6, 4, 3, 2]) {
+      if (plots % cols == 0 && width / cols >= 80) return cols;
+    }
+    // Largura minúscula: usa o menor divisor possível.
+    for (final cols in const [2, 3, 4, 6, 8]) {
+      if (plots % cols == 0) return cols;
+    }
+    return 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     final px = context.pixel;
     return LayoutBuilder(builder: (context, c) {
       final width = c.maxWidth.isFinite ? c.maxWidth : 360.0;
-      final cols = (width / 84).floor().clamp(4, 8);
-      final rows = (plotCount / cols).ceil();
+      final cols = columnsFor(width, plotCount);
+      final rows = plotCount ~/ cols; // divisão exata: nenhuma célula sobra
       final cell = width / cols;
       final order = plantingOrder(plotCount);
       final plantAt = List<int>.filled(plotCount, 0);
