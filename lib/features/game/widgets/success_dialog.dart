@@ -71,6 +71,7 @@ class SuccessDialog extends ConsumerWidget {
     return PixelDialog(
       title: l.gameCorrectTitle,
       maxWidth: 480,
+      actionsAlignment: WrapAlignment.center,
       actions: actions,
       child: Column(
         mainAxisSize: MainAxisSize.min,

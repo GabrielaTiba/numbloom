@@ -163,4 +163,26 @@ void main() {
     expect(s, contains('('));
     expect(LatexBuilder.fromTokens(const [], GameLevel.easy), '');
   });
+
+  test('LaTeX: divisão sai como n/m (sem \\frac)', () {
+    expect(LatexBuilder.fromTokens(tok('8/4=2'), GameLevel.easy), '8/4 = 2');
+    expect(LatexBuilder.fromTokens(tok('8/4=2'), GameLevel.easy),
+        isNot(contains(r'\frac')));
+  });
+
+  test('LaTeX: parênteses só quando a precedência exige', () {
+    // Parênteses digitados pelo jogador continuam aparecendo.
+    expect(LatexBuilder.fromTokens(tok('(1+2)/3=1'), GameLevel.easy),
+        r'\left(1 + 2\right)/3 = 1');
+    expect(LatexBuilder.fromTokens(tok('3/(1*2)=1'), GameLevel.easy),
+        r'3/\left(1 \cdot 2\right) = 1');
+    // a*b/c lê-se (a*b)/c: sem parênteses extras.
+    expect(LatexBuilder.fromTokens(tok('2*6/3=4'), GameLevel.easy),
+        r'2 \cdot 6/3 = 4');
+  });
+
+  test('LaTeX tolerante: divisão incompleta também usa /', () {
+    expect(LatexBuilder.fromTokens(tok('8/'), GameLevel.easy),
+        isNot(contains(r'\div')));
+  });
 }

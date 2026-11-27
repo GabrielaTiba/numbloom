@@ -67,12 +67,32 @@ class LatexBuilder {
       case OperatorKind.multiply:
         return '${_node(n.left)} \\cdot ${_wrapIfUnary(n.right)}';
       case OperatorKind.divide:
-        return '\\frac{${_node(n.left)}}{${_node(n.right)}}';
+        // Pedido do professor: divisão como n/m (e não \frac), para ligar
+        // a expressão aos dígitos originais. Parênteses só quando a
+        // precedência exige, para não mudar o significado da expressão.
+        return '${_divLeft(n.left)}/${_divRight(n.right)}';
       case OperatorKind.power:
         return '${_powerBase(n.left)}^{${_node(n.right)}}';
       default:
         return '';
     }
+  }
+
+  /// Numerador: +/− precisam de parênteses; × e ÷ à esquerda já associam
+  /// corretamente (a·b/c = (a·b)/c). Parênteses do jogador são mantidos.
+  static String _divLeft(Node n) {
+    final needs = n is UnaryNode ||
+        (n is BinaryNode &&
+            (n.op == OperatorKind.add || n.op == OperatorKind.subtract));
+    return needs ? r'\left(' + _node(n) + r'\right)' : _node(n);
+  }
+
+  /// Denominador: qualquer operação binária (a/(b·c), a/(b/c)) ou sinal
+  /// unário precisa de parênteses; potência e funções não.
+  static String _divRight(Node n) {
+    final needs = n is UnaryNode ||
+        (n is BinaryNode && n.op != OperatorKind.power);
+    return needs ? r'\left(' + _node(n) + r'\right)' : _node(n);
   }
 
   static String _powerBase(Node n) {
@@ -92,8 +112,10 @@ class LatexBuilder {
         return '\\sqrt[3]{${_unwrap(n.arg)}}';
       case OperatorKind.factorial:
         final a = n.arg;
-        final isRoot = a is FuncNode &&
-            (a.op == OperatorKind.sqrt || a.op == OperatorKind.cbrt);
+        final isRoot = (a is FuncNode &&
+                (a.op == OperatorKind.sqrt || a.op == OperatorKind.cbrt)) ||
+            a is BinaryNode ||
+            a is UnaryNode;
         return isRoot
             ? r'\left(' + _node(a) + r'\right)!'
             : '${_node(a)}!';
@@ -123,7 +145,7 @@ class LatexBuilder {
         case OperatorKind.multiply:
           b.write(r' \cdot ');
         case OperatorKind.divide:
-          b.write(r' \div ');
+          b.write(' / ');
         case OperatorKind.parenOpen:
           b.write('(');
         case OperatorKind.parenClose:

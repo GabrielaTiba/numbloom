@@ -10,12 +10,16 @@ class PixelDialog extends StatelessWidget {
     required this.child,
     this.actions = const [],
     this.maxWidth = 560,
+    this.actionsAlignment = WrapAlignment.end,
   });
 
   final String title;
   final Widget child;
   final List<Widget> actions;
   final double maxWidth;
+
+  /// Alinhamento dos botões de ação (padrão: à direita).
+  final WrapAlignment actionsAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,7 @@ class PixelDialog extends StatelessWidget {
               if (actions.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Wrap(
-                  alignment: WrapAlignment.end,
+                  alignment: actionsAlignment,
                   spacing: 8,
                   runSpacing: 4,
                   children: actions,
